@@ -5,32 +5,32 @@ const Jwt = require('@hapi/jwt');
 const Inert = require('@hapi/inert');
 const path = require('path');
 
-
 const users = require('./api/users');
 const authentications = require('./api/authentications');
 const _exports = require('./api/exports');
 const uploads = require('./api/uploads');
-
+const umkms = require('./api/umkms');
 
 const UsersService = require('./services/postgres/UsersService');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
 const ProducerService = require('./services/rabbitmq/ProducerService');
 const StorageService = require('./services/storage/StorageService');
+const UmkmsService = require('./services/postgres/UmkmsService');
 
 const UsersValidator = require('./validator/users');
 const AuthenticationsValidator = require('./validator/authentications');
 const ExportsValidator = require('./validator/exports');
 const UploadsValidator = require('./validator/uploads');
+const UmkmsValidator = require('./validator/umkms');
 
 const ClientError = require('./exceptions/ClientError');
 const TokenManager = require('./tokenize/TokenManager');
-const CacheService = require('./services/redis/CacheService');
 
 const init = async () => {
-  const cacheService = new CacheService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
-  const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
+  const umkmsService = new UmkmsService();
+  const storageService = new StorageService(path.resolve(__dirname, 'src/api/umkms/file/images'));
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -53,7 +53,7 @@ const init = async () => {
   ]);
 
   // mendefinisikan strategy autentikasi jwt
-  server.auth.strategy('openmusic_jwt', 'jwt', {
+  server.auth.strategy('mamen_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,
@@ -98,6 +98,14 @@ const init = async () => {
       options: {
         service: storageService,
         validator: UploadsValidator,
+      },
+    },
+    {
+      plugin: umkms,
+      options: {
+        service: umkmsService,
+        storageService,
+        validator: UmkmsValidator,
       },
     },
   ]);
