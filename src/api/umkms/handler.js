@@ -17,7 +17,7 @@ class UmkmsHandler {
     const credentialId = request.auth.credentials.id;
 
     const umkmId = await this._service.addUmkm({
-      name, description, subdistrict, address, year, rating, cover_url, credentialId,
+      name, description, subdistrict, address, year, rating, cover_url, owner: credentialId,
     });
 
     const response = h.response({

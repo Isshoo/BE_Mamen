@@ -8,7 +8,6 @@ const path = require('path');
 const users = require('./api/users');
 const authentications = require('./api/authentications');
 const _exports = require('./api/exports');
-const uploads = require('./api/uploads');
 const umkms = require('./api/umkms');
 
 const UsersService = require('./services/postgres/UsersService');
@@ -20,7 +19,6 @@ const UmkmsService = require('./services/postgres/UmkmsService');
 const UsersValidator = require('./validator/users');
 const AuthenticationsValidator = require('./validator/authentications');
 const ExportsValidator = require('./validator/exports');
-const UploadsValidator = require('./validator/uploads');
 const UmkmsValidator = require('./validator/umkms');
 
 const ClientError = require('./exceptions/ClientError');
@@ -91,13 +89,6 @@ const init = async () => {
       options: {
         service: ProducerService,
         validator: ExportsValidator,
-      },
-    },
-    {
-      plugin: uploads,
-      options: {
-        service: storageService,
-        validator: UploadsValidator,
       },
     },
     {

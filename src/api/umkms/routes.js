@@ -11,7 +11,7 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/umkms/',
+    path: '/umkms',
     handler: handler.getUmkmsHandler,
   },
   {

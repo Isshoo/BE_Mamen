@@ -4,7 +4,7 @@ const routes = (handler) => [
     path: '/export/playlists/{playlistId}',
     handler: handler.postExportPlaylistsHandler,
     options: {
-      auth: 'openmusic_jwt',
+      auth: 'mamen_jwt',
     },
   },
 ];

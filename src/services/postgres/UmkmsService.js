@@ -9,7 +9,7 @@ class UmkmsService {
   }
 
   async addUmkm({
-    name, description, subdistrict, address, year, rating, cover_url, credentialId,
+    name, description, subdistrict, address, year, rating, cover_url, owner,
   }) {
     const id = `umkm-${nanoid(16)}`;
     const created_at = new Date().toISOString();
@@ -26,7 +26,7 @@ class UmkmsService {
         year,
         rating,
         cover_url,
-        credentialId,
+        owner,
         created_at,
         updated_at,
       ],
@@ -61,14 +61,14 @@ class UmkmsService {
       throw new NotFoundError('Umkm tidak ditemukan');
     }
 
-    const listProducts = await this._pool.query({
-      text: 'SELECT id, name, description, price, cover_url FROM products WHERE umkm_id = $1',
-      values: [id],
-    });
+    // const listProducts = await this._pool.query({
+    //   text: 'SELECT id, name, description, price, cover_url FROM products WHERE umkm_id = $1',
+    //   values: [id],
+    // });
 
     return {
       ...result.rows[0],
-      products: listProducts.rows,
+      // products: listProducts.rows,
     };
   }
 
