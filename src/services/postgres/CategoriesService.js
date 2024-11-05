@@ -31,7 +31,7 @@ class CategoriesService {
 
   async getAllCategories() {
     const query = {
-      text: 'SELECT * FROM categories',
+      text: 'SELECT name FROM categories',
     };
     const result = await this._pool.query(query);
 
@@ -40,7 +40,7 @@ class CategoriesService {
 
   async getCategoriesByUmkm(umkmId) {
     const query = {
-      text: 'SELECT * FROM categories WHERE umkms_id = $1',
+      text: 'SELECT name FROM categories WHERE umkms_id = $1',
       values: [umkmId],
     };
     const result = await this._pool.query(query);

@@ -38,7 +38,7 @@ class ReviewsService {
 
   async getAllReviews() {
     const query = {
-      text: 'SELECT * FROM reviews',
+      text: 'SELECT name, review, user_rating, umkms_id FROM reviews',
     };
     const result = await this._pool.query(query);
 
@@ -47,7 +47,7 @@ class ReviewsService {
 
   async getReviewsByUmkm(umkmId) {
     const query = {
-      text: 'SELECT * FROM reviews WHERE umkms_id = $1',
+      text: 'SELECT name, review, user_rating, user_id FROM reviews WHERE umkms_id = $1',
       values: [umkmId],
     };
     const result = await this._pool.query(query);

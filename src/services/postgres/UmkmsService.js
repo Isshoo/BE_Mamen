@@ -50,7 +50,7 @@ class UmkmsService {
 
   async getAllUmkms() {
     const query = {
-      text: 'SELECT * FROM umkms',
+      text: 'SELECT id, name, description, subdistrict, address, year, cover_url, owner FROM umkms',
     };
     const result = await this._pool.query(query);
 
@@ -59,7 +59,7 @@ class UmkmsService {
 
   async getUmkmById(id) {
     const query = {
-      text: 'SELECT * FROM umkms WHERE id = $1',
+      text: 'SELECT name, description, subdistrict, address, year, cover_url, owner FROM umkms WHERE id = $1',
       values: [id],
     };
     const result = await this._pool.query(query);
@@ -69,19 +69,19 @@ class UmkmsService {
     }
 
     const categoriesQuery = {
-      text: 'SELECT * FROM categories WHERE umkms_id = $1',
+      text: 'SELECT name FROM categories WHERE umkms_id = $1',
       values: [id],
     };
     const listCategories = await this._pool.query(categoriesQuery);
 
     const productsQuery = {
-      text: 'SELECT * FROM products WHERE umkms_id = $1',
+      text: 'SELECT name, product_type, description, price, cover_url FROM products WHERE umkms_id = $1',
       values: [id],
     };
     const listProducts = await this._pool.query(productsQuery);
 
     const reviewsQuery = {
-      text: 'SELECT * FROM reviews WHERE umkms_id = $1',
+      text: 'SELECT name, review, user_rating FROM reviews WHERE umkms_id = $1',
       values: [id],
     };
     const listReviews = await this._pool.query(reviewsQuery);

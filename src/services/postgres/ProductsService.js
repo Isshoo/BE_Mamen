@@ -37,7 +37,7 @@ class ProductsService {
 
   async getAllProducts() {
     const query = {
-      text: 'SELECT * FROM products',
+      text: 'SELECT name, product_type, description, price, cover_url, umkms_id FROM products',
     };
     const result = await this._pool.query(query);
 
@@ -46,7 +46,7 @@ class ProductsService {
 
   async getProductsByUmkm(umkmId) {
     const query = {
-      text: 'SELECT * FROM products WHERE umkms_id = $1',
+      text: 'SELECT name, product_type, description, price, cover_url FROM products WHERE umkms_id = $1',
       values: [umkmId],
     };
     const result = await this._pool.query(query);
