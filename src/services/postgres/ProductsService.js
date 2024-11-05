@@ -37,7 +37,19 @@ class ProductsService {
 
   async getAllProducts() {
     const query = {
-      text: 'SELECT name, product_type, description, price, cover_url, umkms_id FROM products',
+      text: `
+        SELECT 
+          p.name, 
+          p.product_type, 
+          p.description, 
+          p.price, 
+          p.cover_url,
+          u.name AS umkm_name
+        FROM 
+          products p
+        JOIN 
+          umkms u ON p.umkms_id = u.id
+      `,
     };
     const result = await this._pool.query(query);
 

@@ -31,7 +31,17 @@ class CategoriesService {
 
   async getAllCategories() {
     const query = {
-      text: 'SELECT name FROM categories',
+      text: `
+      SELECT 
+          c.name, 
+          ARRAY_AGG(u.name) AS umkm_names
+      FROM 
+          categories c
+      JOIN 
+          umkms u ON c.umkms_id = u.id
+      GROUP BY 
+          c.name
+      `,
     };
     const result = await this._pool.query(query);
 

@@ -38,7 +38,17 @@ class ReviewsService {
 
   async getAllReviews() {
     const query = {
-      text: 'SELECT name, review, user_rating, umkms_id FROM reviews',
+      text: `
+        SELECT 
+          r.name, 
+          r.review, 
+          r.user_rating, 
+          u.name AS umkm_name
+        FROM 
+          reviews r
+        JOIN 
+          umkms u ON r.umkms_id = u.id
+      `,
     };
     const result = await this._pool.query(query);
 

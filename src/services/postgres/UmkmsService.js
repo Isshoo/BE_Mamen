@@ -50,7 +50,25 @@ class UmkmsService {
 
   async getAllUmkms() {
     const query = {
-      text: 'SELECT id, name, description, subdistrict, address, year, cover_url, owner FROM umkms',
+      text: `
+        SELECT 
+          u.id, 
+          u.name, 
+          u.description, 
+          u.subdistrict, 
+          u.address, 
+          u.year, 
+          u.rating,
+          u.cover_url, 
+          u.owner, 
+          COALESCE(ARRAY_AGG(c.name), ARRAY[]::text[]) AS categories
+        FROM 
+          umkms u
+        LEFT JOIN 
+          categories c ON u.id = c.umkms_id
+        GROUP BY 
+          u.id, u.name, u.description, u.subdistrict, u.address, u.year, u.cover_url, u.owner
+      `,
     };
     const result = await this._pool.query(query);
 
