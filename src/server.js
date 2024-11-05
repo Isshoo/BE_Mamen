@@ -7,7 +7,6 @@ const path = require('path');
 
 const users = require('./api/users');
 const authentications = require('./api/authentications');
-const _exports = require('./api/exports');
 const umkms = require('./api/umkms');
 const products = require('./api/products');
 const categories = require('./api/categories');
@@ -15,7 +14,6 @@ const reviews = require('./api/reviews');
 
 const UsersService = require('./services/postgres/UsersService');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
-const ProducerService = require('./services/rabbitmq/ProducerService');
 const StorageService = require('./services/storage/StorageService');
 const UmkmsService = require('./services/postgres/UmkmsService');
 const ProductsService = require('./services/postgres/ProductsService');
@@ -24,7 +22,6 @@ const ReviewsService = require('./services/postgres/ReviewsService');
 
 const UsersValidator = require('./validator/users');
 const AuthenticationsValidator = require('./validator/authentications');
-const ExportsValidator = require('./validator/exports');
 const UmkmsValidator = require('./validator/umkms');
 const ProductsValidator = require('./validator/products');
 const CategoriesValidator = require('./validator/categories');
@@ -95,13 +92,6 @@ const init = async () => {
         usersService,
         tokenManager: TokenManager,
         validator: AuthenticationsValidator,
-      },
-    },
-    {
-      plugin: _exports,
-      options: {
-        service: ProducerService,
-        validator: ExportsValidator,
       },
     },
     {

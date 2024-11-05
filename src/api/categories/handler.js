@@ -9,7 +9,7 @@ class CategoriesHandler {
   }
 
   async postCategoryHandler(request, h) {
-    this._validator.validateProductPayload(request.payload);
+    this._validator.validateCategoryPayload(request.payload);
     const { name } = request.payload;
     const { umkmId: umkms_id } = request.params;
     const owner = request.auth.credentials.id;

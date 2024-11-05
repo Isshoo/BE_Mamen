@@ -77,7 +77,7 @@ class UmkmsService {
 
   async getUmkmById(id) {
     const query = {
-      text: 'SELECT name, description, subdistrict, address, year, cover_url, owner FROM umkms WHERE id = $1',
+      text: 'SELECT name, description, subdistrict, address, year, rating, cover_url, owner FROM umkms WHERE id = $1',
       values: [id],
     };
     const result = await this._pool.query(query);

@@ -1,7 +1,7 @@
 const { CategoryPayloadSchema } = require('./schema');
 
 const CategoriesValidator = {
-  validateProductPayload: (payload) => {
+  validateCategoryPayload: (payload) => {
     const validationResult = CategoryPayloadSchema.validate(payload);
 
     if (validationResult.error) {
