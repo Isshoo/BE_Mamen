@@ -9,15 +9,16 @@ class ProductsService {
   }
 
   async addProduct({
-    name, description, price, cover_url, umkms_id,
+    name, product_type, description, price, cover_url, umkms_id,
   }) {
     const id = `product-${nanoid(16)}`;
 
     const query = {
-      text: 'INSERT INTO products VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
+      text: 'INSERT INTO products VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
       values: [
         id,
         name,
+        product_type,
         description,
         price,
         cover_url,
@@ -69,12 +70,13 @@ class ProductsService {
   }
 
   async editProductById(id, {
-    name, description, price, cover_url,
+    name, product_type, description, price, cover_url,
   }) {
     const query = {
-      text: 'UPDATE products SET name = $1, description = $2, price = $3, cover_url = $4 WHERE id = $5 RETURNING id',
+      text: 'UPDATE products SET name = $1, product_type = $2, description = $3, price = $4, cover_url = $5 WHERE id = $6 RETURNING id',
       values: [
         name,
+        product_type,
         description,
         price,
         cover_url,
@@ -118,10 +120,10 @@ class ProductsService {
     return result.rows[0].id;
   }
 
-  async verifyUmkmOwner(umkm_id, owner) {
+  async verifyUmkmOwner(umkms_id, owner) {
     const query = {
       text: 'SELECT id FROM umkms WHERE id = $1 AND owner = $2',
-      values: [umkm_id, owner],
+      values: [umkms_id, owner],
     };
     const result = await this._pool.query(query);
 

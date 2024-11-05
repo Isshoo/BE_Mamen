@@ -8,6 +8,10 @@ exports.up = (pgm) => {
       type: 'TEXT',
       notNull: true,
     },
+    product_type: {
+      type: 'TEXT',
+      notNull: true,
+    },
     description: {
       type: 'TEXT',
       notNull: true,

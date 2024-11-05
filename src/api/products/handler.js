@@ -12,7 +12,7 @@ class ProductsHandler {
   async postProductHandler(request, h) {
     this._validator.validateProductPayload(request.payload);
     const {
-      name, description, price, cover_url = null,
+      name, product_type, description, price, cover_url = null,
     } = request.payload;
     const { umkmId: umkms_id } = request.params;
     const owner = request.auth.credentials.id;
@@ -20,7 +20,7 @@ class ProductsHandler {
     await this._service.verifyUmkmOwner(umkms_id, owner);
 
     const productId = await this._service.addProduct({
-      name, description, price, cover_url, umkms_id,
+      name, product_type, description, price, cover_url, umkms_id,
     });
 
     const response = h.response({
