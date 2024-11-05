@@ -9,11 +9,18 @@ class UmkmsService {
   }
 
   async addUmkm({
-    name, description, subdistrict, address, year, rating, cover_url, owner,
+    name, description, subdistrict, address, year, cover_url, owner,
   }) {
     const id = `umkm-${nanoid(16)}`;
     const created_at = new Date().toISOString();
     const updated_at = created_at;
+
+    const ratingQuery = {
+      text: 'SELECT AVG(user_rating) AS avg_rating FROM reviews WHERE umkms_id = $1',
+      values: [id],
+    };
+    const ratingResult = await this._pool.query(ratingQuery);
+    const rating = ratingResult.rows[0].avg_rating || 0;
 
     const query = {
       text: 'INSERT INTO umkms VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id',
@@ -73,18 +80,34 @@ class UmkmsService {
     };
     const listProducts = await this._pool.query(productsQuery);
 
+    const reviewsQuery = {
+      text: 'SELECT * FROM reviews WHERE umkms_id = $1',
+      values: [id],
+    };
+    const listReviews = await this._pool.query(reviewsQuery);
+
     return {
       ...result.rows[0],
       categories: listCategories.rows,
       products: listProducts.rows,
+      reviews: listReviews.rows,
     };
   }
 
   async editUmkmById(id, {
-    name, description, subdistrict, address, year, rating, cover_url,
+    name, description, subdistrict, address, year, cover_url,
   }) {
+    const ratingQuery = {
+      text: 'SELECT AVG(user_rating) AS avg_rating FROM reviews WHERE umkms_id = $1',
+      values: [id],
+    };
+    const ratingResult = await this._pool.query(ratingQuery);
+    const rating = ratingResult.rows[0].avg_rating || 0;
+
+    // update umkm
+    const updated_at = new Date().toISOString();
     const query = {
-      text: 'UPDATE umkms SET name = $1, description = $2, subdistrict = $3, address = $4, year = $5, rating = $6, cover_url = $7 WHERE id = $8 RETURNING id',
+      text: 'UPDATE umkms SET name = $1, description = $2, subdistrict = $3, address = $4, year = $5, rating = $6, cover_url = $7, updated_at = $8 WHERE id = $9 RETURNING id',
       values: [
         name,
         description,
@@ -93,6 +116,7 @@ class UmkmsService {
         year,
         rating,
         cover_url,
+        updated_at,
         id,
       ],
     };
