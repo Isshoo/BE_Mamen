@@ -106,7 +106,7 @@ class ProductsHandler {
     const filename = await this._storageService.writeFile(cover_url, cover_url.hapi);
     const path = `http://${process.env.HOST}:${process.env.PORT}/products/images/${filename}`;
 
-    await this._service.editProductCoverById(productId, { path });
+    await this._service.updateProductCover(productId, { path });
 
     const response = h.response({
       status: 'success',

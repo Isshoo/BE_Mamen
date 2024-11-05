@@ -90,7 +90,7 @@ class UmkmsHandler {
     const filename = await this._storageService.writeFile(cover_url, cover_url.hapi);
     const path = `http://${process.env.HOST}:${process.env.PORT}/umkms/images/${filename}`;
 
-    await this._service.editUmkmCoverById(umkmId, { path });
+    await this._service.updateUmkmCover(umkmId, { path });
 
     const response = h.response({
       status: 'success',

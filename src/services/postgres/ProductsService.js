@@ -46,7 +46,7 @@ class ProductsService {
 
   async getProductsByUmkm(umkmId) {
     const query = {
-      text: 'SELECT name, product_type, description, price, cover_url FROM products WHERE umkms_id = $1',
+      text: 'SELECT id, name, product_type, description, price, cover_url FROM products WHERE umkms_id = $1',
       values: [umkmId],
     };
     const result = await this._pool.query(query);
@@ -105,10 +105,9 @@ class ProductsService {
   }
 
   async updateProductCover(productId, { path }) {
-    const updated_at = new Date().toISOString();
     const query = {
-      text: 'UPDATE products SET cover_url = $1, updated_at = $2 WHERE id = $3 RETURNING id',
-      values: [path, updated_at, productId],
+      text: 'UPDATE products SET cover_url = $1 WHERE id = $2 RETURNING id',
+      values: [path, productId],
     };
 
     const result = await this._pool.query(query);

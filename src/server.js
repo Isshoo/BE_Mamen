@@ -40,8 +40,8 @@ const init = async () => {
   const productsService = new ProductsService();
   const categoriesService = new CategoriesService();
   const reviewsService = new ReviewsService();
-  const storageServiceUmkms = new StorageService(path.resolve(__dirname, 'src/api/umkms/file/images'));
-  const storageServiceProducts = new StorageService(path.resolve(__dirname, 'src/api/products/file/images'));
+  const storageServiceUmkms = new StorageService(path.resolve(__dirname, 'api/umkms/file/images'));
+  const storageServiceProducts = new StorageService(path.resolve(__dirname, 'api/products/file/images'));
 
   const server = Hapi.server({
     port: process.env.PORT,
