@@ -1,5 +1,5 @@
 exports.up = (pgm) => {
-  pgm.createTable('umkms_products', {
+  pgm.createTable('products', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
@@ -7,7 +7,6 @@ exports.up = (pgm) => {
     name: {
       type: 'TEXT',
       notNull: true,
-      unique: true,
     },
     description: {
       type: 'TEXT',
@@ -29,5 +28,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-  pgm.dropTable('umkms_products');
+  pgm.dropTable('products');
 };

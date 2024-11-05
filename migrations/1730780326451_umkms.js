@@ -12,7 +12,7 @@ exports.up = (pgm) => {
       type: 'TEXT',
       notNull: true,
     },
-    city: {
+    subdistrict: {
       type: 'TEXT',
       notNull: true,
     },
