@@ -9,17 +9,20 @@ const users = require('./api/users');
 const authentications = require('./api/authentications');
 const _exports = require('./api/exports');
 const umkms = require('./api/umkms');
+const products = require('./api/products');
 
 const UsersService = require('./services/postgres/UsersService');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
 const ProducerService = require('./services/rabbitmq/ProducerService');
 const StorageService = require('./services/storage/StorageService');
 const UmkmsService = require('./services/postgres/UmkmsService');
+const ProductsService = require('./services/postgres/ProductsService');
 
 const UsersValidator = require('./validator/users');
 const AuthenticationsValidator = require('./validator/authentications');
 const ExportsValidator = require('./validator/exports');
 const UmkmsValidator = require('./validator/umkms');
+const ProductsValidator = require('./validator/products');
 
 const ClientError = require('./exceptions/ClientError');
 const TokenManager = require('./tokenize/TokenManager');
@@ -28,7 +31,9 @@ const init = async () => {
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const umkmsService = new UmkmsService();
-  const storageService = new StorageService(path.resolve(__dirname, 'src/api/umkms/file/images'));
+  const productsService = new ProductsService();
+  const storageServiceUmkms = new StorageService(path.resolve(__dirname, 'src/api/umkms/file/images'));
+  const storageServiceProducts = new StorageService(path.resolve(__dirname, 'src/api/products/file/images'));
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -95,8 +100,16 @@ const init = async () => {
       plugin: umkms,
       options: {
         service: umkmsService,
-        storageService,
+        storageService: storageServiceUmkms,
         validator: UmkmsValidator,
+      },
+    },
+    {
+      plugin: products,
+      options: {
+        service: productsService,
+        storageService: storageServiceProducts,
+        validator: ProductsValidator,
       },
     },
   ]);

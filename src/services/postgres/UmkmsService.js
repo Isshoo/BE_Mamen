@@ -61,14 +61,20 @@ class UmkmsService {
       throw new NotFoundError('Umkm tidak ditemukan');
     }
 
-    // const listProducts = await this._pool.query({
-    //   text: 'SELECT id, name, description, price, cover_url FROM products WHERE umkm_id = $1',
-    //   values: [id],
-    // });
-
+    const productsQuery = {
+      text: 'SELECT * FROM products WHERE umkms_id = $1',
+      values: [id],
+    };
+    const listProducts = await this._pool.query(productsQuery);
+    if (listProducts.rows.length < 0) {
+      return {
+        ...result.rows[0],
+        products: [],
+      };
+    }
     return {
       ...result.rows[0],
-      // products: listProducts.rows,
+      products: listProducts.rows,
     };
   }
 
@@ -120,6 +126,20 @@ class UmkmsService {
 
     if (!result.rows.length) {
       throw new NotFoundError('Gagal memperbarui cover umkm. Id tidak ditemukan');
+    }
+
+    return result.rows[0].id;
+  }
+
+  async verifyUmkmOwner(umkm_id, owner) {
+    const query = {
+      text: 'SELECT id FROM umkms WHERE id = $1 AND owner = $2',
+      values: [umkm_id, owner],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Umkm gagal dihapus. Id Umkm atau owner salah');
     }
 
     return result.rows[0].id;

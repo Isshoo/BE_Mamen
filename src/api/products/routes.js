@@ -3,42 +3,47 @@ const path = require('path');
 const routes = (handler) => [
   {
     method: 'POST',
-    path: '/umkms',
-    handler: handler.postUmkmHandler,
+    path: '/umkms/{umkmId}/products',
+    handler: handler.postProductHandler,
     options: {
       auth: 'mamen_jwt',
     },
   },
   {
     method: 'GET',
-    path: '/umkms',
-    handler: handler.getUmkmsHandler,
+    path: '/umkms/{umkmId}/products',
+    handler: handler.getProductsByUmkmHandler,
   },
   {
     method: 'GET',
-    path: '/umkms/{id}',
-    handler: handler.getUmkmByIdHandler,
+    path: '/products',
+    handler: handler.getProductsHandler,
+  },
+  {
+    method: 'GET',
+    path: '/products/{id}',
+    handler: handler.getProductByIdHandler,
   },
   {
     method: 'PUT',
-    path: '/umkms/{id}',
-    handler: handler.putUmkmByIdHandler,
+    path: '/umkms/{umkmId}/products/{id}',
+    handler: handler.putProductByIdHandler,
     options: {
       auth: 'mamen_jwt',
     },
   },
   {
     method: 'DELETE',
-    path: '/umkms/{id}',
-    handler: handler.deleteUmkmByIdHandler,
+    path: '/umkms/{umkmId}/products/{id}',
+    handler: handler.deleteProductByIdHandler,
     options: {
       auth: 'mamen_jwt',
     },
   },
   {
     method: 'POST',
-    path: '/umkms/{id}/covers',
-    handler: handler.postUmkmCoverHandler,
+    path: '/umkms/{umkmId}/products/{id}/covers',
+    handler: handler.postProductCoverHandler,
     options: {
       auth: 'mamen_jwt',
       payload: {
@@ -51,7 +56,7 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/umkms/{params*}',
+    path: '/products/{params*}',
     handler: {
       directory: {
         path: path.resolve(__dirname, 'file'),

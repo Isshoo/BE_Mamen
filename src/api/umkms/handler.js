@@ -55,6 +55,9 @@ class UmkmsHandler {
   async putUmkmByIdHandler(request) {
     this._validator.validateUmkmPayload(request.payload);
     const { id } = request.params;
+    const credentialId = request.auth.credentials.id;
+
+    await this._service.verifyUmkmOwner(id, credentialId);
 
     await this._service.editUmkmById(id, request.payload);
 
@@ -66,6 +69,8 @@ class UmkmsHandler {
 
   async deleteUmkmByIdHandler(request) {
     const { id } = request.params;
+    const credentialId = request.auth.credentials.id;
+    await this._service.verifyUmkmOwner(id, credentialId);
     await this._service.deleteUmkmById(id);
 
     return {
@@ -77,6 +82,8 @@ class UmkmsHandler {
   async postUmkmCoverHandler(request, h) {
     const { id: umkmId } = request.params;
     const { cover_url } = request.payload;
+    const owner = request.auth.credentials.id;
+    await this._service.verifyUmkmOwner(umkmId, owner);
 
     this._validator.validateImageHeaders(cover_url.hapi.headers);
 
