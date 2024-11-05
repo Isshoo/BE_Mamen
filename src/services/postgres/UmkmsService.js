@@ -61,19 +61,21 @@ class UmkmsService {
       throw new NotFoundError('Umkm tidak ditemukan');
     }
 
+    const categoriesQuery = {
+      text: 'SELECT * FROM categories WHERE umkms_id = $1',
+      values: [id],
+    };
+    const listCategories = await this._pool.query(categoriesQuery);
+
     const productsQuery = {
       text: 'SELECT * FROM products WHERE umkms_id = $1',
       values: [id],
     };
     const listProducts = await this._pool.query(productsQuery);
-    if (listProducts.rows.length < 0) {
-      return {
-        ...result.rows[0],
-        products: [],
-      };
-    }
+
     return {
       ...result.rows[0],
+      categories: listCategories.rows,
       products: listProducts.rows,
     };
   }
@@ -139,7 +141,7 @@ class UmkmsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Umkm gagal dihapus. Id Umkm atau owner salah');
+      throw new NotFoundError('Id Umkm atau owner salah');
     }
 
     return result.rows[0].id;

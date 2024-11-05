@@ -128,7 +128,7 @@ class ProductsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Umkm gagal dihapus. Id Umkm atau owner salah');
+      throw new NotFoundError('Id Umkm atau owner salah');
     }
 
     return result.rows[0].id;
