@@ -5,32 +5,40 @@ const Jwt = require('@hapi/jwt');
 const Inert = require('@hapi/inert');
 const path = require('path');
 
-
 const users = require('./api/users');
 const authentications = require('./api/authentications');
-const _exports = require('./api/exports');
-const uploads = require('./api/uploads');
-
+const umkms = require('./api/umkms');
+const products = require('./api/products');
+const categories = require('./api/categories');
+const reviews = require('./api/reviews');
 
 const UsersService = require('./services/postgres/UsersService');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
-const ProducerService = require('./services/rabbitmq/ProducerService');
 const StorageService = require('./services/storage/StorageService');
+const UmkmsService = require('./services/postgres/UmkmsService');
+const ProductsService = require('./services/postgres/ProductsService');
+const CategoriesService = require('./services/postgres/CategoriesService');
+const ReviewsService = require('./services/postgres/ReviewsService');
 
 const UsersValidator = require('./validator/users');
 const AuthenticationsValidator = require('./validator/authentications');
-const ExportsValidator = require('./validator/exports');
-const UploadsValidator = require('./validator/uploads');
+const UmkmsValidator = require('./validator/umkms');
+const ProductsValidator = require('./validator/products');
+const CategoriesValidator = require('./validator/categories');
+const ReviewsValidator = require('./validator/reviews');
 
 const ClientError = require('./exceptions/ClientError');
 const TokenManager = require('./tokenize/TokenManager');
-const CacheService = require('./services/redis/CacheService');
 
 const init = async () => {
-  const cacheService = new CacheService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
-  const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
+  const umkmsService = new UmkmsService();
+  const productsService = new ProductsService();
+  const categoriesService = new CategoriesService();
+  const reviewsService = new ReviewsService();
+  const storageServiceUmkms = new StorageService(path.resolve(__dirname, 'api/umkms/file/images'));
+  const storageServiceProducts = new StorageService(path.resolve(__dirname, 'api/products/file/images'));
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -53,7 +61,7 @@ const init = async () => {
   ]);
 
   // mendefinisikan strategy autentikasi jwt
-  server.auth.strategy('openmusic_jwt', 'jwt', {
+  server.auth.strategy('mamen_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,
@@ -87,17 +95,33 @@ const init = async () => {
       },
     },
     {
-      plugin: _exports,
+      plugin: umkms,
       options: {
-        service: ProducerService,
-        validator: ExportsValidator,
+        service: umkmsService,
+        storageService: storageServiceUmkms,
+        validator: UmkmsValidator,
       },
     },
     {
-      plugin: uploads,
+      plugin: products,
       options: {
-        service: storageService,
-        validator: UploadsValidator,
+        service: productsService,
+        storageService: storageServiceProducts,
+        validator: ProductsValidator,
+      },
+    },
+    {
+      plugin: categories,
+      options: {
+        service: categoriesService,
+        validator: CategoriesValidator,
+      },
+    },
+    {
+      plugin: reviews,
+      options: {
+        service: reviewsService,
+        validator: ReviewsValidator,
       },
     },
   ]);
