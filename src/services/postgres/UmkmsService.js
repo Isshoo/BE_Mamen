@@ -214,6 +214,7 @@ class UmkmsService {
           OR LOWER(u.subdistrict) LIKE $1
           OR LOWER(u.address) LIKE $1
           OR CAST(u.year AS TEXT) LIKE $1
+          OR LOWER(c.name) LIKE $1
       GROUP BY 
           u.id
       `,
@@ -251,6 +252,7 @@ class UmkmsService {
       text: `
       SELECT 
           p.name, 
+          p.product_type, 
           p.description, 
           p.price, 
           p.cover_url, 
