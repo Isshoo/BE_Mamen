@@ -51,23 +51,25 @@ class UmkmsService {
   async getAllUmkms() {
     const query = {
       text: `
-        SELECT 
+      SELECT 
           u.id, 
           u.name, 
           u.description, 
           u.subdistrict, 
           u.address, 
           u.year, 
-          u.rating,
+          ROUND(COALESCE(AVG(r.user_rating), 0), 2) AS rating, 
           u.cover_url, 
-          u.owner, 
-          COALESCE(ARRAY_AGG(c.name), ARRAY[]::text[]) AS categories
-        FROM 
+          u.owner,
+          ARRAY_AGG(DISTINCT c.name) AS categories 
+      FROM 
           umkms u
-        LEFT JOIN 
-          categories c ON u.id = c.umkms_id
-        GROUP BY 
-          u.id, u.name, u.description, u.subdistrict, u.address, u.year, u.cover_url, u.owner
+      LEFT JOIN 
+          reviews r ON u.id = r.umkms_id 
+      LEFT JOIN 
+          categories c ON u.id = c.umkms_id 
+      GROUP BY 
+          u.id, u.name, u.description, u.subdistrict, u.address, u.year, u.cover_url
       `,
     };
     const result = await this._pool.query(query);
@@ -77,7 +79,25 @@ class UmkmsService {
 
   async getUmkmById(id) {
     const query = {
-      text: 'SELECT name, description, subdistrict, address, year, rating, cover_url, owner FROM umkms WHERE id = $1',
+      text: `
+      SELECT 
+        u.name, 
+        u.description, 
+        u.subdistrict, 
+        u.address, 
+        u.year, 
+        ROUND(COALESCE(AVG(r.user_rating), 0), 2) AS rating,  
+        u.cover_url, 
+        u.owner 
+      FROM 
+          umkms u 
+      LEFT JOIN 
+          reviews r ON u.id = r.umkms_id 
+      WHERE 
+          u.id = $1 
+      GROUP BY 
+      u.id, u.name, u.description, u.subdistrict, u.address, u.year, u.cover_url
+      `,
       values: [id],
     };
     const result = await this._pool.query(query);
