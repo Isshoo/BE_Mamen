@@ -9,7 +9,7 @@ class UmkmsService {
   }
 
   async addUmkm({
-    name, description, subdistrict, address, year, cover_url, owner,
+    name, description, subdistrict, address, contact, year, cover_url, owner,
   }) {
     const id = `umkm-${nanoid(16)}`;
     const created_at = new Date().toISOString();
@@ -23,13 +23,14 @@ class UmkmsService {
     const rating = ratingResult.rows[0].avg_rating || 0;
 
     const query = {
-      text: 'INSERT INTO umkms VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id',
+      text: 'INSERT INTO umkms VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id',
       values: [
         id,
         name,
         description,
         subdistrict,
         address,
+        contact,
         year,
         rating,
         cover_url,
@@ -57,6 +58,7 @@ class UmkmsService {
           u.description, 
           u.subdistrict, 
           u.address, 
+          u.contact, 
           u.year, 
           ROUND(COALESCE(AVG(r.user_rating), 0), 2) AS rating, 
           u.cover_url, 
@@ -69,7 +71,7 @@ class UmkmsService {
       LEFT JOIN 
           categories c ON u.id = c.umkms_id 
       GROUP BY 
-          u.id, u.name, u.description, u.subdistrict, u.address, u.year, u.cover_url
+          u.id, u.name, u.description, u.subdistrict, u.address, u.contact, u.year, u.cover_url
       `,
     };
     const result = await this._pool.query(query);
@@ -84,7 +86,8 @@ class UmkmsService {
         u.name, 
         u.description, 
         u.subdistrict, 
-        u.address, 
+        u.address,
+        u.contact,  
         u.year, 
         ROUND(COALESCE(AVG(r.user_rating), 0), 2) AS rating,  
         u.cover_url, 
@@ -96,7 +99,7 @@ class UmkmsService {
       WHERE 
           u.id = $1 
       GROUP BY 
-      u.id, u.name, u.description, u.subdistrict, u.address, u.year, u.cover_url
+      u.id, u.name, u.description, u.subdistrict, u.address, u.contact, u.year, u.cover_url
       `,
       values: [id],
     };
@@ -133,7 +136,7 @@ class UmkmsService {
   }
 
   async editUmkmById(id, {
-    name, description, subdistrict, address, year, cover_url,
+    name, description, subdistrict, address, contact, year, cover_url,
   }) {
     const ratingQuery = {
       text: 'SELECT AVG(user_rating) AS avg_rating FROM reviews WHERE umkms_id = $1',
@@ -145,12 +148,13 @@ class UmkmsService {
     // update umkm
     const updated_at = new Date().toISOString();
     const query = {
-      text: 'UPDATE umkms SET name = $1, description = $2, subdistrict = $3, address = $4, year = $5, rating = $6, cover_url = $7, updated_at = $8 WHERE id = $9 RETURNING id',
+      text: 'UPDATE umkms SET name = $1, description = $2, subdistrict = $3, address = $4, contact = $5, year = $6, rating = $7, cover_url = $8, updated_at = $9 WHERE id = $10 RETURNING id',
       values: [
         name,
         description,
         subdistrict,
         address,
+        contact,
         year,
         rating,
         cover_url,
@@ -219,7 +223,8 @@ class UmkmsService {
           u.name, 
           u.description, 
           u.subdistrict, 
-          u.address, 
+          u.address,
+          u.contact,  
           u.year, 
           u.rating, 
           u.cover_url,
@@ -233,6 +238,7 @@ class UmkmsService {
           OR LOWER(u.description) LIKE $1
           OR LOWER(u.subdistrict) LIKE $1
           OR LOWER(u.address) LIKE $1
+          OR LOWER(u.contact) LIKE $1 
           OR CAST(u.year AS TEXT) LIKE $1
           OR LOWER(c.name) LIKE $1
       GROUP BY 

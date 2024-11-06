@@ -20,6 +20,10 @@ exports.up = (pgm) => {
       type: 'TEXT',
       notNull: true,
     },
+    contact: {
+      type: 'TEXT',
+      notNull: true,
+    },
     year: {
       type: 'INTEGER',
       notNull: true,

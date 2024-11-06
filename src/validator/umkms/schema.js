@@ -7,6 +7,7 @@ const UmkmPayloadSchema = Joi.object({
   address: Joi.string().required(),
   year: Joi.number().integer().min(1900).max(new Date().getFullYear())
     .required(),
+  contact: Joi.string().required(),
 });
 
 const ImageHeadersSchema = Joi.object({

@@ -12,12 +12,12 @@ class UmkmsHandler {
   async postUmkmHandler(request, h) {
     this._validator.validateUmkmPayload(request.payload);
     const {
-      name, description, subdistrict, address, year, cover_url = null,
+      name, description, subdistrict, address, contact, year, cover_url = null,
     } = request.payload;
     const credentialId = request.auth.credentials.id;
 
     const umkmId = await this._service.addUmkm({
-      name, description, subdistrict, address, year, cover_url, owner: credentialId,
+      name, description, subdistrict, address, contact, year, cover_url, owner: credentialId,
     });
 
     const response = h.response({
