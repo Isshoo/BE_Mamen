@@ -3,7 +3,6 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const Inert = require('@hapi/inert');
-const path = require('path');
 
 const users = require('./api/users');
 const authentications = require('./api/authentications');
@@ -14,7 +13,7 @@ const reviews = require('./api/reviews');
 
 const UsersService = require('./services/postgres/UsersService');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
-const StorageService = require('./services/storage/StorageService');
+const StorageService = require('./services/S3/StorageService');
 const UmkmsService = require('./services/postgres/UmkmsService');
 const ProductsService = require('./services/postgres/ProductsService');
 const CategoriesService = require('./services/postgres/CategoriesService');
@@ -37,8 +36,8 @@ const init = async () => {
   const productsService = new ProductsService();
   const categoriesService = new CategoriesService();
   const reviewsService = new ReviewsService();
-  const storageServiceUmkms = new StorageService(path.resolve(__dirname, 'api/umkms/file/images'));
-  const storageServiceProducts = new StorageService(path.resolve(__dirname, 'api/products/file/images'));
+  const storageServiceUmkms = new StorageService();
+  const storageServiceProducts = new StorageService();
 
   const server = Hapi.server({
     port: process.env.PORT,

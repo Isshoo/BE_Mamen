@@ -87,8 +87,8 @@ class UmkmsHandler {
 
     this._validator.validateImageHeaders(cover_url.hapi.headers);
 
-    const filename = await this._storageService.writeFile(cover_url, cover_url.hapi);
-    const path = `http://${process.env.HOST}:${process.env.PORT}/umkms/images/${filename}`;
+    const fileLocation = await this._storageService.writeFile(cover_url, cover_url.hapi);
+    const path = fileLocation;
 
     await this._service.updateUmkmCover(umkmId, { path });
 
