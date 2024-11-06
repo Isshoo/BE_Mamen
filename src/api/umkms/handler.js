@@ -99,6 +99,16 @@ class UmkmsHandler {
     response.code(201);
     return response;
   }
+
+  async searchHandler(request) {
+    const searchQuery = request.query.query || '';
+    const results = await this._service.searchAll(searchQuery);
+
+    return {
+      status: 'success',
+      data: results,
+    };
+  }
 }
 
 module.exports = UmkmsHandler;

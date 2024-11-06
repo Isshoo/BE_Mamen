@@ -9,24 +9,34 @@ class CategoriesService {
   }
 
   async addCategory({ name, umkms_id }) {
-    const id = `category-${nanoid(16)}`;
-
-    const query = {
-      text: 'INSERT INTO categories VALUES($1, $2, $3) RETURNING id',
-      values: [
-        id,
-        name,
-        umkms_id,
-      ],
+    const checkQuery = {
+      text: 'SELECT * FROM categories WHERE name = $1 AND umkms_id = $2',
+      values: [name, umkms_id],
     };
 
-    const result = await this._pool.query(query);
+    const checkResult = await this._pool.query(checkQuery);
+    if (checkResult.rowCount > 0) {
+      throw new Error('Kategori ini sudah ada untuk UMKM tersebut.');
+    } else {
+      const id = `category-${nanoid(16)}`;
 
-    if (!result.rows[0].id) {
-      throw new InvariantError('Category gagal ditambahkan');
+      const query = {
+        text: 'INSERT INTO categories VALUES($1, $2, $3) RETURNING id',
+        values: [
+          id,
+          name,
+          umkms_id,
+        ],
+      };
+
+      const result = await this._pool.query(query);
+
+      if (!result.rows[0].id) {
+        throw new InvariantError('Category gagal ditambahkan');
+      }
+
+      return result.rows[0].id;
     }
-
-    return result.rows[0].id;
   }
 
   async getAllCategories() {

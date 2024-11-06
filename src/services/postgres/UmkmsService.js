@@ -188,6 +188,102 @@ class UmkmsService {
 
     return result.rows[0].id;
   }
+
+  // search
+
+  async searchUmkms(searchQuery) {
+    const query = {
+      text: `
+      SELECT 
+          u.id, 
+          u.name, 
+          u.description, 
+          u.subdistrict, 
+          u.address, 
+          u.year, 
+          u.rating, 
+          u.cover_url,
+          ARRAY_AGG(c.name) AS categories
+      FROM 
+          umkms u
+      LEFT JOIN 
+          categories c ON u.id = c.umkms_id
+      WHERE 
+          LOWER(u.name) LIKE $1
+          OR LOWER(u.description) LIKE $1
+          OR LOWER(u.subdistrict) LIKE $1
+          OR LOWER(u.address) LIKE $1
+          OR CAST(u.year AS TEXT) LIKE $1
+      GROUP BY 
+          u.id
+      `,
+      values: [`%${searchQuery.toLowerCase()}%`],
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows.map((row) => ({ ...row }));
+  }
+
+  async searchCategories(searchQuery) {
+    const query = {
+      text: `
+      SELECT 
+          c.name, 
+          ARRAY_AGG(u.name) AS umkms
+      FROM 
+          categories c
+      JOIN 
+          umkms u ON c.umkms_id = u.id
+      WHERE 
+          LOWER(c.name) LIKE $1
+      GROUP BY 
+          c.id
+      `,
+      values: [`%${searchQuery.toLowerCase()}%`],
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows.map((row) => ({ ...row }));
+  }
+
+  async searchProducts(searchQuery) {
+    const query = {
+      text: `
+      SELECT 
+          p.name, 
+          p.description, 
+          p.price, 
+          p.cover_url, 
+          u.name AS umkm 
+      FROM 
+          products p
+      JOIN
+          umkms u ON p.umkms_id = u.id
+      WHERE 
+          LOWER(p.name) LIKE $1
+          OR LOWER(p.product_type) LIKE $1
+          OR LOWER(p.description) LIKE $1
+      `,
+      values: [`%${searchQuery.toLowerCase()}%`],
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows.map((row) => ({ ...row }));
+  }
+
+  async searchAll(searchQuery) {
+    // Panggil fungsi pencarian untuk setiap tabel
+    const umkmsResults = await this.searchUmkms(searchQuery);
+    const categoriesResults = await this.searchCategories(searchQuery);
+    const productsResults = await this.searchProducts(searchQuery);
+
+    // Gabungkan hasil pencarian dalam objek terstruktur
+    return {
+      umkms: umkmsResults,
+      categories: categoriesResults,
+      products: productsResults,
+    };
+  }
 }
 
 module.exports = UmkmsService;

@@ -58,6 +58,11 @@ const routes = (handler) => [
       },
     },
   },
+  {
+    method: 'GET',
+    path: '/search',
+    handler: handler.searchHandler,
+  },
 ];
 
 module.exports = routes;
