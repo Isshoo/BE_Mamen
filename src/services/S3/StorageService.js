@@ -32,7 +32,7 @@ class StorageService {
 
   createPreSignedUrl({ bucket, key }) {
     const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-    return getSignedUrl(this._S3, command, { expiresIn: 3600 });
+    return getSignedUrl(this._S3, command, { expiresIn: 31536000 });
   }
 }
 
