@@ -39,11 +39,13 @@ class ProductsService {
     const query = {
       text: `
         SELECT 
+          p.id, 
           p.name, 
           p.product_type, 
           p.description, 
           p.price, 
-          p.cover_url,
+          p.cover_url, 
+          p.umkms_id, 
           u.name AS umkm_name
         FROM 
           products p

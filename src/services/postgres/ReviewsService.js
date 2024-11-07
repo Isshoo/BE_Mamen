@@ -40,9 +40,11 @@ class ReviewsService {
     const query = {
       text: `
         SELECT 
+          r.id, 
           r.name, 
           r.review, 
           r.user_rating, 
+          r.umkms_id, 
           u.name AS umkm_name
         FROM 
           reviews r
