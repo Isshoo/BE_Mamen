@@ -135,6 +135,15 @@ class UmkmsService {
     };
   }
 
+  async getUmkmByUser(id) {
+    const query = {
+      text: 'SELECT * FROM umkms WHERE owner = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+    return result.rows;
+  }
+
   async editUmkmById(id, {
     name, description, subdistrict, address, contact, year, cover_url,
   }) {

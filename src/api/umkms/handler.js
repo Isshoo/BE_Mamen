@@ -52,6 +52,17 @@ class UmkmsHandler {
     };
   }
 
+  async getUmkmByUserHandler(request) {
+    const { id } = request.auth.credentials;
+    const umkm = await this._service.getUmkmByUser(id);
+    return {
+      status: 'success',
+      data: {
+        umkm,
+      },
+    };
+  }
+
   async putUmkmByIdHandler(request) {
     this._validator.validateUmkmPayload(request.payload);
     const { id } = request.params;

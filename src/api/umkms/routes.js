@@ -20,6 +20,14 @@ const routes = (handler) => [
     handler: handler.getUmkmByIdHandler,
   },
   {
+    method: 'GET',
+    path: '/profile',
+    handler: handler.getUmkmByUserHandler,
+    options: {
+      auth: 'mamen_jwt',
+    },
+  },
+  {
     method: 'PUT',
     path: '/umkms/{id}',
     handler: handler.putUmkmByIdHandler,
