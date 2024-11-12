@@ -84,16 +84,15 @@ class ProductsService {
   }
 
   async editProductById(id, {
-    name, product_type, description, price, cover_url,
+    name, product_type, description, price,
   }) {
     const query = {
-      text: 'UPDATE products SET name = $1, product_type = $2, description = $3, price = $4, cover_url = $5 WHERE id = $6 RETURNING id',
+      text: 'UPDATE products SET name = $1, product_type = $2, description = $3, price = $4 WHERE id = $5 RETURNING id',
       values: [
         name,
         product_type,
         description,
         price,
-        cover_url,
         id,
       ],
     };

@@ -145,7 +145,7 @@ class UmkmsService {
   }
 
   async editUmkmById(id, {
-    name, description, subdistrict, address, contact, year, cover_url,
+    name, description, subdistrict, address, contact, year,
   }) {
     const ratingQuery = {
       text: 'SELECT AVG(user_rating) AS avg_rating FROM reviews WHERE umkms_id = $1',
@@ -157,7 +157,7 @@ class UmkmsService {
     // update umkm
     const updated_at = new Date().toISOString();
     const query = {
-      text: 'UPDATE umkms SET name = $1, description = $2, subdistrict = $3, address = $4, contact = $5, year = $6, rating = $7, cover_url = $8, updated_at = $9 WHERE id = $10 RETURNING id',
+      text: 'UPDATE umkms SET name = $1, description = $2, subdistrict = $3, address = $4, contact = $5, year = $6, rating = $7, updated_at = $8 WHERE id = $9 RETURNING id',
       values: [
         name,
         description,
@@ -166,7 +166,6 @@ class UmkmsService {
         contact,
         year,
         rating,
-        cover_url,
         updated_at,
         id,
       ],
