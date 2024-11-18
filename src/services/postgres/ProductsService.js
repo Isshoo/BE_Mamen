@@ -5,7 +5,12 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 
 class ProductsService {
   constructor() {
-    this._pool = new Pool();
+    this._pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
   }
 
   async addProduct({
