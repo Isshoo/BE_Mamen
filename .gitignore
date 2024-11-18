@@ -6,3 +6,4 @@ package-lock.json
 mamen-api-webserver.pem
 src/api/uploads/file
 .DS_Store
+.zprofile

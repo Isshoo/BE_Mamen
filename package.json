@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node ./src/server.js",
     "start:dev": "nodemon ./src/server.js",
     "lint": "eslint ./src",
-    "migrate": "node-pg-migrate",
+    "migrate": "node-pg-migrate up",
     "newman": "newman run ./postman/Open-Music-API-V3-Test.postman_collection.json --environment ./postman/Open-Music-API-Test.postman_environment.json"
   },
   "keywords": [],
@@ -28,6 +28,7 @@
     "amqplib": "^0.10.4",
     "auto-bind": "^4.0.0",
     "bcrypt": "^5.1.1",
+    "cloudinary": "^2.5.1",
     "dotenv": "^16.3.1",
     "joi": "^17.11.0",
     "nanoid": "^3.1.20",

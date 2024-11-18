@@ -13,7 +13,7 @@ const reviews = require('./api/reviews');
 
 const UsersService = require('./services/postgres/UsersService');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
-const StorageService = require('./services/S3/StorageService');
+const StorageService = require('./services/cloudinary/StorageService');
 const UmkmsService = require('./services/postgres/UmkmsService');
 const ProductsService = require('./services/postgres/ProductsService');
 const CategoriesService = require('./services/postgres/CategoriesService');
