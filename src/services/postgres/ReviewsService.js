@@ -5,12 +5,7 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 
 class ReviewsService {
   constructor() {
-    this._pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    });
+    this._pool = new Pool();
   }
 
   async addReview({
