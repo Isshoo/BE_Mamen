@@ -1,5 +1,5 @@
 {
-  "name": "openmusic-api",
+  "name": "mamen-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -19,8 +19,6 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.682.0",
-    "@aws-sdk/s3-request-presigner": "^3.682.0",
     "@hapi/hapi": "^21.3.2",
     "@hapi/inert": "^7.1.0",
     "@hapi/jwt": "^3.2.0",
